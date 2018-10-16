@@ -24,7 +24,6 @@
       :required="required"
       :readonly="!typeable"
       @click="showCalendar"
-      @keyup="parseTypedDate"
       @blur="inputBlurred"
       autocomplete="off">
     <!-- Clear Button -->
@@ -79,7 +78,10 @@ export default {
         return null
       }
       if (this.typedDate) {
-        return this.typedDate
+        let parsedTypedDate = new Date(this.formatTypedDate(this.typedDate))
+        return typeof this.format === 'function'
+          ? this.format(parsedTypedDate)
+          : this.utils.formatDate(new Date(parsedTypedDate), this.format, this.translation)
       }
       return typeof this.format === 'function'
         ? this.format(this.selectedDate)
@@ -119,11 +121,7 @@ export default {
       }
 
       if (this.typeable) {
-        const parsedDate = Date.parse(this.getTypedDate(this.input.value))
-        if (!isNaN(parsedDate)) {
-          this.typedDate = this.input.value
-          this.$emit('typedDate', new Date(parsedDate))
-        }
+
       }
     },
     /**
@@ -131,10 +129,16 @@ export default {
      * called once the input is blurred
      */
     inputBlurred () {
-      if (this.typeable && isNaN(Date.parse(this.getTypedDate(this.input.value)))) {
+      if (this.typeable) {
+        const parsedDate = Date.parse(this.getTypedDate(this.input.value))
+        if (!isNaN(parsedDate)) {
+          this.typedDate = this.input.value
+          this.$emit('typedDate', new Date(parsedDate))
+        } else {
         this.clearDate()
         this.input.value = null
         this.typedDate = null
+        }
       }
 
       this.$emit('closeCalendar')
