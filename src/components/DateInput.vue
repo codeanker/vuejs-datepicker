@@ -115,9 +115,16 @@ export default {
     inputBlurred () {
       if (this.typeable) {
         const parsedDate = Date.parse(this.getTypedDate(this.input.value))
-        if (!isNaN(parsedDate) && !this.isDisabledDate(new Date(parsedDate))) {
+        let date = new Date(parsedDate)
+        if (!isNaN(parsedDate)) {
+          if (this.disabledDates.to && date < this.disabledDates.to) {
+            date = this.disabledDates.to
+          }
+          if (this.disabledDates.from && date > this.disabledDates.from) {
+            date = this.disabledDates.from
+          }
           this.typedDate = this.input.value
-          this.$emit('typedDate', new Date(parsedDate))
+          this.$emit('typedDate', date)
         } else {
           this.clearDate()
           this.input.value = null
@@ -141,48 +148,6 @@ export default {
         ? this.formatTypedDate(input)
         : input
       return date
-    },
-    isDisabledDate (date) {
-      let disabledDates = false
-
-      if (typeof this.disabledDates === 'undefined') {
-        return false
-      }
-
-      if (typeof this.disabledDates.dates !== 'undefined') {
-        this.disabledDates.dates.forEach((d) => {
-          if (this.utils.compareDates(date, d)) {
-            disabledDates = true
-            return true
-          }
-        })
-      }
-      if (typeof this.disabledDates.to !== 'undefined' && this.disabledDates.to && date < this.disabledDates.to) {
-        disabledDates = true
-      }
-      if (typeof this.disabledDates.from !== 'undefined' && this.disabledDates.from && date > this.disabledDates.from) {
-        disabledDates = true
-      }
-      if (typeof this.disabledDates.ranges !== 'undefined') {
-        this.disabledDates.ranges.forEach((range) => {
-          if (typeof range.from !== 'undefined' && range.from && typeof range.to !== 'undefined' && range.to) {
-            if (date < range.to && date > range.from) {
-              disabledDates = true
-              return true
-            }
-          }
-        })
-      }
-      if (typeof this.disabledDates.days !== 'undefined' && this.disabledDates.days.indexOf(this.utils.getDay(date)) !== -1) {
-        disabledDates = true
-      }
-      if (typeof this.disabledDates.daysOfMonth !== 'undefined' && this.disabledDates.daysOfMonth.indexOf(this.utils.getDate(date)) !== -1) {
-        disabledDates = true
-      }
-      if (typeof this.disabledDates.customPredictor === 'function' && this.disabledDates.customPredictor(date)) {
-        disabledDates = true
-      }
-      return disabledDates
     }
   },
   mounted () {
