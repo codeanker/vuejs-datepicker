@@ -20,6 +20,7 @@
       :calendarButtonIcon="calendarButtonIcon"
       :calendarButtonIconContent="calendarButtonIconContent"
       :disabled="disabled"
+      :disabledDates="disabledDates"
       :required="required"
       :bootstrapStyling="bootstrapStyling"
       :use-utc="useUtc"

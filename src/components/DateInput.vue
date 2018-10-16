@@ -115,7 +115,7 @@ export default {
     inputBlurred () {
       if (this.typeable) {
         const parsedDate = Date.parse(this.getTypedDate(this.input.value))
-        if (!isNaN(parsedDate) && !this.isDisabledDate(parsedDate)) {
+        if (!isNaN(parsedDate) && !this.isDisabledDate(new Date(parsedDate))) {
           this.typedDate = this.input.value
           this.$emit('typedDate', new Date(parsedDate))
         } else {
