@@ -80,6 +80,7 @@ export default {
       }
       if (this.typedDate) {
         let parsedTypedDate = new Date(this.formatTypedDate(this.typedDate))
+        console.log('typed', parsedTypedDate)
         return typeof this.format === 'function'
           ? this.format(parsedTypedDate)
           : this.utils.formatDate(new Date(parsedTypedDate), this.format, this.translation)
@@ -118,12 +119,15 @@ export default {
         let date = new Date(parsedDate)
         if (!isNaN(parsedDate)) {
           if (this.disabledDates.to && date < this.disabledDates.to) {
-            date = this.disabledDates.to
+            date = new Date(this.disabledDates.to)
+            date.setDate(date.getDate() + 1)
           }
           if (this.disabledDates.from && date > this.disabledDates.from) {
-            date = this.disabledDates.from
+            date = new Date(this.disabledDates.from)
           }
-          this.typedDate = this.input.value
+          this.typedDate = typeof this.format === 'function'
+            ? this.format(date)
+            : this.utils.formatDate(new Date(date), this.format, this.translation)
           this.$emit('typedDate', date)
         } else {
           this.clearDate()

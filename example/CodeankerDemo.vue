@@ -11,6 +11,7 @@
       typeable
       format="dd.MM.yyyy"/>
     </div>
+    <pre>{{ model }}</pre>
   </div>
 </template>
 
@@ -29,8 +30,9 @@ export default {
   },
   data () {
     return {
+      model: null,
       disabledDates: {
-        to: new Date()
+        from: new Date()
       },
     }
   },
