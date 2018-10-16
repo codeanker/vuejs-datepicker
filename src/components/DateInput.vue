@@ -135,9 +135,9 @@ export default {
           this.typedDate = this.input.value
           this.$emit('typedDate', new Date(parsedDate))
         } else {
-        this.clearDate()
-        this.input.value = null
-        this.typedDate = null
+          this.clearDate()
+          this.input.value = null
+          this.typedDate = null
         }
       }
 
