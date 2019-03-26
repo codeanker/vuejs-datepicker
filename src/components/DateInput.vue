@@ -80,7 +80,6 @@ export default {
       }
       if (this.typedDate) {
         let parsedTypedDate = new Date(this.formatTypedDate(this.typedDate))
-        console.log('typed', parsedTypedDate)
         return typeof this.format === 'function'
           ? this.format(parsedTypedDate)
           : this.utils.formatDate(new Date(parsedTypedDate), this.format, this.translation)
